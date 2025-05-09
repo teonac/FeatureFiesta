@@ -1,0 +1,56 @@
+[
+  {
+    "id": "1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p",
+    "username": "admin.user",
+    "email": "admin@example.com",
+    "firstName": "Admin",
+    "lastName": "User",
+    "role": "ADMIN",
+    "department": "IT Services",
+    "permissions": [
+      "READ_PERSON",
+      "WRITE_PERSON",
+      "DELETE_PERSON",
+      "READ_COMPANY",
+      "WRITE_COMPANY",
+      "DELETE_COMPANY",
+      "MANAGE_USERS",
+      "SYSTEM_CONFIGURATION"
+    ],
+    "active": true,
+    "lastLogin": "2025-05-09T08:15:30Z",
+    "createdDate": "2024-01-15T09:00:00Z",
+    "token": "admin-access-token"
+  },
+  {
+    "id": "2b3c4d5e-6f7g-8h9i-0j1k-2l3m4n5o6p7q",
+    "username": "civil.servant",
+    "email": "servant@example.com",
+    "firstName": "Civil",
+    "lastName": "Servant",
+    "role": "CIVIL_SERVANT",
+    "department": "Registry Office",
+    "permissions": [
+      "READ_PERSON",
+      "READ_COMPANY"
+    ],
+    "active": true,
+    "lastLogin": "2025-05-08T14:22:45Z",
+    "createdDate": "2024-03-10T11:30:00Z",
+    "token": "normal-access-token"
+  },
+  {
+    "id": "3c4d5e6f-7g8h-9i0j-1k2l-3m4n5o6p7q8r",
+    "username": "no.person.access",
+    "email": "noperson@example.com",
+    "firstName": "No",
+    "lastName": "Access",
+    "role": "USER",
+    "department": "General Services",
+    "permissions": [],
+    "active": true,
+    "lastLogin": "2025-05-09T10:00:00Z",
+    "createdDate": "2025-05-01T12:00:00Z",
+    "token": "no-person-access-token"
+  }
+]
