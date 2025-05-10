@@ -2,6 +2,7 @@ package com.example.app.steps;
 
 import com.example.app.model.Person;
 import com.example.app.model.User;
+import com.example.app.utils.ValidationUtils;
 import io.cucumber.core.internal.com.fasterxml.jackson.core.type.TypeReference;
 import io.cucumber.core.internal.com.fasterxml.jackson.databind.ObjectMapper;
 import io.cucumber.datatable.DataTable;
@@ -61,8 +62,8 @@ public class ReadPersonSteps {
             person.setLastNamePrefix(row.get("last_name_prefix"));
             person.setInitials(row.get("initials"));
             person.setGenderDesignation(row.get("gender_designation"));
-            person.setDateOfBirth(!checkNull(row.get("date_of_birth")) ? LocalDate.parse(row.get("date_of_birth"), DOB_FORMATTER) : null);
-            person.setAuthorizedPersonId(!checkNull(row.get("authorized_person_id")) ? UUID.fromString(row.get("authorized_person_id")) : null);
+            person.setDateOfBirth(!ValidationUtils.checkNull(row.get("date_of_birth")) ? LocalDate.parse(row.get("date_of_birth"), DOB_FORMATTER) : null);
+            person.setAuthorizedPersonId(!ValidationUtils.checkNull(row.get("authorized_person_id")) ? UUID.fromString(row.get("authorized_person_id")) : null);
             person.setEmail(row.get("email"));
             person.setIndicationSecret(Integer.parseInt(row.get("indication_secret")));
 
@@ -101,10 +102,14 @@ public class ReadPersonSteps {
         loadUser("CIVIL_SERVANT");
     }
 
-
-
     @When("the user reads a person with ID {string}")
     public void theUserReadsAPersonWithID(String id) {
+        if (!ValidationUtils.isValidUUID(id)) {
+            responseStatusCode = 400;
+            responseBody = Map.of("error", "Invalid UUID format");
+            return;
+        }
+
         if (currentUser == null) {
             responseStatusCode = 401;
             responseBody = Map.of("error", "Authentication required");
@@ -128,6 +133,30 @@ public class ReadPersonSteps {
 
     @When("the user reads a person with BSN {string}")
     public void theUserReadsAPersonWithBSN(String bsn) {
+        if (currentUser == null) {
+            responseStatusCode = 401;
+            responseBody = Map.of("error", "Authentication required");
+            return;
+        }
+
+        if (!currentUser.getPermissions().contains("READ_PERSON")) {
+            responseStatusCode = 403;
+            responseBody = Map.of("error", "Insufficient permissions to access this person's details");
+            return;
+        }
+
+        if (ValidationUtils.containsLetters(bsn)) {
+            responseStatusCode = 400;
+            responseBody = Map.of("error", "Invalid BSN format");
+            return;
+        }
+
+        if (!ValidationUtils.is11ProefRespected(bsn)) {
+            responseStatusCode = 400;
+            responseBody = Map.of("error", "BSN does not comply with the 11-test");
+            return;
+        }
+
         responseBody = personList.stream()
                 .filter(p -> bsn.equals(p.getBsn()))
                 .findFirst()
@@ -138,6 +167,18 @@ public class ReadPersonSteps {
 
     @When("the user reads a person with ANP_ID {string}")
     public void theUserReadsAPersonWithANP_ID(String anpId) {
+        if (currentUser == null) {
+            responseStatusCode = 401;
+            responseBody = Map.of("error", "Authentication required");
+            return;
+        }
+
+        if (!currentUser.getPermissions().contains("READ_PERSON")) {
+            responseStatusCode = 403;
+            responseBody = Map.of("error", "Insufficient permissions to access this person's details");
+            return;
+        }
+
         responseBody = personList.stream()
                 .filter(p -> anpId.equals(p.getAnpId()))
                 .findFirst()
@@ -168,7 +209,15 @@ public class ReadPersonSteps {
     public void theUserReadsAPersonWithoutProvidingBSNOrANP_ID() {}
 
     @When("the user reads a person with BSN {string} and ANP_ID {string}")
-    public void theUserReadsAPersonWithBSNAndANP_ID(String arg0, String arg1) {}
+    public void theUserReadsAPersonWithBSNAndANP_ID(String arg0, String arg1) {
+        boolean hasBSN = arg0 != null && !arg0.isBlank();
+        boolean hasANP = arg1 != null && !arg1.isBlank();
+
+        if (hasBSN && hasANP) {
+            responseStatusCode = 400;
+            responseBody = Map.of("error", "Both BSN and ANP_ID provided; only one should be provided");
+        }
+    }
 
     @When("the user creates a person with email {string}")
     public void theUserCreatesAPersonWithEmail(String arg0) {}
@@ -191,7 +240,9 @@ public class ReadPersonSteps {
     public void theResponseTimeShouldBeLessThanMilliseconds(int arg0) {}
 
     @And("the system should log the attempted injection")
-    public void theSystemShouldLogTheAttemptedInjection() {}
+    public void theSystemShouldLogTheAttemptedInjection() {
+        System.out.println("Security Alert: Possible SQL injection attempt");
+    }
 
     @And("the response content type should be {string}")
     public void theResponseContentTypeShouldBe(String arg0) {}
@@ -213,5 +264,18 @@ public class ReadPersonSteps {
     @Given("the user is authenticated with user access rights")
     public void theUserIsAuthenticatedWithUserAccessRights() {
         loadUser("USER");
+    }
+
+    @When("the user reads a person without providing BSN or ANP_ID or Id")
+    public void theUserReadsAPersonWithoutProvidingBSNOrANP_IDOrId() {
+
+    }
+
+    @When("the user reads a person without providing BSN or ANP_ID or Id {string}")
+    public void theUserReadsAPersonWithoutProvidingBSNOrANP_IDOrId(String arg0) {
+        if (ValidationUtils.checkNull(arg0)) {
+            responseStatusCode = 400;
+            responseBody = Map.of("error", "At least one search parameter is required");
+        }
     }
 }

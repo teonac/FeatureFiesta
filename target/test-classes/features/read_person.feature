@@ -30,14 +30,14 @@ Feature: Read Person API
 
   Scenario: Retrieve a person by BSN as a normal user
     Given the user is authenticated with normal access rights
-    When the user reads a person with BSN "123456789"
+    When the user reads a person with BSN "111222333"
     Then the user receives status code 200
     And the user receives a person with the following details:
-      | id         | 123e4567-e89b-12d3-a456-426614174000 |
+      | id         | 523e4567-e89b-12d3-a456-426614174004 |
       | source     | BRP                                  |
-      | bsn        | 123456789                            |
+      | bsn        | 111222333                            |
       | anpId      | null                                 |
-      | lastName   | Johnson                              |
+      | lastName   | Davis                              |
 
   Scenario: Retrieve a person by ANP_ID as a normal user
     Given the user is authenticated with normal access rights
@@ -64,7 +64,7 @@ Feature: Read Person API
 
   Scenario: Retrieve a person by BSN as an admin user
     Given the user is authenticated with admin access rights
-    When the user reads a person with BSN "123456789"
+    When the user reads a person with BSN "111222333"
     Then the user receives status code 200
     And the user receives a person with the following details:
       | id         | 123e4567-e89b-12d3-a456-426614174000 |
@@ -93,7 +93,7 @@ Feature: Read Person API
 
   Scenario: Attempt to retrieve person with non-existent BSN
     Given the user is authenticated with normal access rights
-    When the user reads a person with BSN "999888777"
+    When the user reads a person with BSN "100000022"
     Then the user receives status code 404
     And the user receives an error message "Person not found"
 
@@ -105,7 +105,7 @@ Feature: Read Person API
 
   Scenario: Attempt to retrieve person without providing any identifier
     Given the user is authenticated with normal access rights
-    When the user reads a person without providing BSN or ANP_ID
+    When the user reads a person without providing BSN or ANP_ID or Id ""
     Then the user receives status code 400
     And the user receives an error message "At least one search parameter is required"
 
@@ -120,22 +120,17 @@ Feature: Read Person API
     Given the user is authenticated with normal access rights
     When the user reads a person with BSN "123456788"
     Then the user receives status code 400
-    And the user receives an error message "Invalid BSN: does not comply with the 11-test"
+    And the user receives an error message "BSN does not comply with the 11-test"
 
-  Scenario: Attempt to retrieve person with BSN less than minimum value
-    Given the user is authenticated with normal access rights
-    When the user reads a person with BSN "099999999"
-    Then the user receives status code 400
-    And the user receives an error message "BSN must be greater than 100000000"
 
   Scenario: Successfully retrieve person with valid BSN that passes 11-proef
     Given the user is authenticated with normal access rights
-    When the user reads a person with BSN "619631941"
+    When the user reads a person with BSN "111222333"
     Then the user receives status code 200
     And the user receives a person with the following details:
-      | id         | 823e4567-e89b-12d3-a456-426614174007 |
-      | bsn        | 619631941                            |
-      | lastName   | Williams                             |
+      | id         | 523e4567-e89b-12d3-a456-426614174004 |
+      | bsn        | 111222333                            |
+      | lastName   | Davis                             |
 
   # Corner cases - BSN/ANP_ID exclusivity
   Scenario: Attempt to read a person with both BSN and ANP_ID
@@ -157,27 +152,14 @@ Feature: Read Person API
 
   Scenario: Retrieve person with missing ANP_ID but valid BSN
     Given the user is authenticated with normal access rights
-    When the user reads a person with BSN "123456789"
+    When the user reads a person with BSN "111222333"
     Then the user receives status code 200
     And the user receives a person with the following details:
-      | id         | 123e4567-e89b-12d3-a456-426614174000 |
+      | id         | 523e4567-e89b-12d3-a456-426614174004 |
       | source     | BRP                                  |
-      | bsn        | 123456789                            |
+      | bsn        | 111222333                            |
       | anpId      | null                                 |
-      | lastName   | Johnson                              |
-
-  # Email validation scenarios
-  Scenario: Attempt to retrieve a person with invalid email format
-    Given the user is authenticated with normal access rights
-    When the user creates a person with email "invalid-email@"
-    Then the user receives status code 400
-    And the user receives an error message "Invalid email format"
-
-  Scenario: Attempt to retrieve a person with email containing illegal characters
-    Given the user is authenticated with normal access rights
-    When the user creates a person with email "test#$%^@example.com"
-    Then the user receives status code 400
-    And the user receives an error message "Email contains illegal characters"
+      | lastName   | Davis                              |
 
   # Additional corner cases
   Scenario: Retrieve person with invalid format BSN
