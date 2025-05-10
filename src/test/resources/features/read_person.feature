@@ -7,14 +7,14 @@ Feature: Read Person API
     Given the API is available
     And the following persons exist in the system:
       | id                                   | source | bsn         | anp_id     | last_name | last_name_prefix | initials | gender_designation | date_of_birth | authorized_person_id                 | email                | indication_secret |
-      | 123e4567-e89b-12d3-a456-426614174000 | BRP    | 123456789   | null       | Johnson   |                  | A.B.    | M                 | 19800101      | null                                 | ajohnson@example.com | 0                |
-      | 223e4567-e89b-12d3-a456-426614174001 | ANP    | null        | ANP123456  | Smith     |                  | C.D.    | F                 | 19850215      | null                                 | csmith@example.com   | 0                |
-      | 323e4567-e89b-12d3-a456-426614174002 | BRP    | 987654321   | null       | Brown     | van der          | E.F.    | M                 | 19900530      | 723e4567-e89b-12d3-a456-426614174006 | ebrown@example.com   | 1                |
-      | 423e4567-e89b-12d3-a456-426614174003 | ANP    | null        | null       | Miller    | de               | G.H.    | F                 | 19750420      | null                                 | gmiller@example.com  | 0                |
-      | 523e4567-e89b-12d3-a456-426614174004 | BRP    | 111222333   | null       | Davis     |                  | I.J.    | X                 | 19950610      | null                                 | idavis@example.com   | 0                |
-      | 623e4567-e89b-12d3-a456-426614174005 | ANP    | null        | ANP111222  | Wilson    |                  | K.L.    | M                 | null          | 723e4567-e89b-12d3-a456-426614174006 | kwilson@example.com  | 1                |
-      | 723e4567-e89b-12d3-a456-426614174006 | BRP    | 444555666   | null       | Anderson  |                  | M.N.    | F                 | 19780305      | null                                 | manderson@example.com| 0                |
-      | 823e4567-e89b-12d3-a456-426614174007 | BRP    | 619631941   | null       | Williams  |                  | O.P.    | M                 | 19920712      | null                                 | owilliams@example.com| 0                |
+      | 123e4567-e89b-12d3-a456-426614174000 | BRP    | 123456789   | null       | Johnson   |                  | A.B.     | M                  | 19800101      | null                                 | ajohnson@example.com | 0                |
+      | 223e4567-e89b-12d3-a456-426614174001 | ANP    | null        | ANP123456  | Smith     |                  | C.D.     | F                  | 19850215      | null                                 | csmith@example.com   | 0                |
+      | 323e4567-e89b-12d3-a456-426614174002 | BRP    | 987654321   | null       | Brown     | van der          | E.F.     | M                  | 19900530      | 723e4567-e89b-12d3-a456-426614174006 | ebrown@example.com   | 1                |
+      | 423e4567-e89b-12d3-a456-426614174003 | ANP    | null        | null       | Miller    | de               | G.H.     | F                  | 19750420      | null                                 | gmiller@example.com  | 0                |
+      | 523e4567-e89b-12d3-a456-426614174004 | BRP    | 111222333   | null       | Davis     |                  | I.J.     | X                  | 19950610      | null                                 | idavis@example.com   | 0                |
+      | 623e4567-e89b-12d3-a456-426614174005 | ANP    | null        | ANP111222  | Wilson    |                  | K.L.     | M                  | null          | 723e4567-e89b-12d3-a456-426614174006 | kwilson@example.com  | 1                |
+      | 723e4567-e89b-12d3-a456-426614174006 | BRP    | 444555666   | null       | Anderson  |                  | M.N.     | F                  | 19780305      | null                                 | manderson@example.com| 0                |
+      | 823e4567-e89b-12d3-a456-426614174007 | BRP    | 619631941   | null       | Williams  |                  | O.P.     | M                  | 19920712      | null                                 | owilliams@example.com| 0                |
 
   Scenario: Retrieve a person by ID as a normal user
     Given the user is authenticated with normal access rights
@@ -110,7 +110,7 @@ Feature: Read Person API
     And the user receives an error message "At least one search parameter is required"
 
   Scenario: Attempt to access person with insufficient permissions
-    Given the user is authenticated with normal access rights
+    Given the user is authenticated with user access rights
     When the user reads a person with ID "323e4567-e89b-12d3-a456-426614174002"
     Then the user receives status code 403
     And the user receives an error message "Insufficient permissions to access this person's details"

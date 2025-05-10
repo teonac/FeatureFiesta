@@ -1,5 +1,9 @@
 package com.example.app.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.UUID;
@@ -7,6 +11,8 @@ import java.util.UUID;
 /**
  * Model class representing a Person in the system
  */
+
+@Data
 public class Person {
     private UUID id;
     private String source;

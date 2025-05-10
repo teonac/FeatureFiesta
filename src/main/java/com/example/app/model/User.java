@@ -1,5 +1,7 @@
 package com.example.app.model;
 
+import lombok.Data;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -7,6 +9,8 @@ import java.util.Objects;
 /**
  * Model class representing a User in the system
  */
+
+@Data
 public class User {
     private String id;
     private String username;
