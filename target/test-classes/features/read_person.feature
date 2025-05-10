@@ -51,7 +51,7 @@ Feature: Read Person API
       | lastName   | Smith                                |
 
   Scenario: Retrieve a person by ID as an admin user
-    Given the user is authenticated with normal access rights
+    Given the user is authenticated with admin access rights
     When the user reads a person with ID "123e4567-e89b-12d3-a456-426614174000"
     Then the user receives status code 200
     And the user receives a person with the following details:
@@ -63,7 +63,7 @@ Feature: Read Person API
       | email      | ajohnson@example.com                 |
 
   Scenario: Retrieve a person by BSN as an admin user
-    Given the user is authenticated with normal access rights
+    Given the user is authenticated with admin access rights
     When the user reads a person with BSN "123456789"
     Then the user receives status code 200
     And the user receives a person with the following details:
@@ -74,7 +74,7 @@ Feature: Read Person API
       | lastName   | Johnson                              |
 
   Scenario: Retrieve a person by ANP_ID as an admin user
-    Given the user is authenticated with normal access rights
+    Given the user is authenticated with admin access rights
     When the user reads a person with ANP_ID "ANP123456"
     Then the user receives status code 200
     And the user receives a person with the following details:
